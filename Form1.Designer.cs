@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Text;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -10,14 +11,15 @@ namespace DKMail
 {
     partial class Form1
     {
-        private string[] recipients;
         public Form1()
         {
-            string[] config = null;
-            if(File.Exists("mailer.config")) 
-                config = File.ReadAllLines("mailer.config", System.Text.Encoding.UTF8);
-            else if(File.Exists(Application.UserAppDataPath + "\\DKMail.config")) 
-                config = File.ReadAllLines(Application.UserAppDataPath + "\\DKMail.config", System.Text.Encoding.UTF8);
+            string[] config = null;            
+            if (File.Exists("DKMail.config")) 
+                config = File.ReadAllLines("DKMail.config", System.Text.Encoding.UTF8);
+            else if (File.Exists(Path.Combine(Directory.GetParent(Application.UserAppDataPath).FullName, "DKMail.config")))
+                config = File.ReadAllLines(Path.Combine(Directory.GetParent(Application.UserAppDataPath).FullName, "DKMail.config"), System.Text.Encoding.UTF8);
+            else if (File.Exists(Path.Combine(Directory.GetParent(Application.CommonAppDataPath).FullName, "DKMail.config")))
+                config = File.ReadAllLines(Path.Combine(Directory.GetParent(Application.CommonAppDataPath).FullName, "DKMail.config"), System.Text.Encoding.UTF8);
             else
             {
                 MessageBox.Show("Файл конфигурации DKMail.config\nдолжен быть в текущей папке или в папке\n" + Application.UserAppDataPath
@@ -26,23 +28,27 @@ namespace DKMail
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
             InitializeComponent();
-            recipients = new string[config.Length+1];
-            this.comboBox1.Items.Insert(0, "Выберите категорию обращения");            
-            this.comboBox1.SelectedIndex = 0;
+            groupedComboBox1.ValueMember = "Mail";
+            groupedComboBox1.DisplayMember = "Display";
+            groupedComboBox1.GroupMember = "Group";
             
+            ArrayList ds = new ArrayList();
+            ds.Add(new gitem(String.Empty, "Выберите категорию обращения", String.Empty));
+                                                
             for(var i=0;i<config.Length; i++)
             {
                 string[] tokens = config[i].Split(';');
-                comboBox1.Items.Add(tokens[0]);
-                recipients[i] = tokens[1];
+                ds.Add(new gitem(tokens[0], tokens[1], tokens[2]));
             }
-
+            
+            groupedComboBox1.DataSource = ds;
+            
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this._DragEnter);
             this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
             this.textBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this._DragEnter);
-            this.comboBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
-            this.comboBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this._DragEnter);
+            this.groupedComboBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
+            this.groupedComboBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this._DragEnter);
             this.button1.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
             this.button1.DragEnter += new System.Windows.Forms.DragEventHandler(this._DragEnter);
             this.button3.DragDrop += new System.Windows.Forms.DragEventHandler(this._DragDrop);
@@ -94,11 +100,11 @@ namespace DKMail
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.groupedComboBox1 = new GroupedComboBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -130,16 +136,6 @@ namespace DKMail
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(331, 95);
             this.listBox1.TabIndex = 2;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.AllowDrop = true;
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(-1, -1);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(417, 21);
-            this.comboBox1.TabIndex = 3;
             // 
             // button2
             // 
@@ -182,17 +178,26 @@ namespace DKMail
             this.label2.TabIndex = 7;
             this.label2.Text = "Текст обращения";
             // 
+            // groupedComboBox1
+            // 
+            this.groupedComboBox1.DataSource = null;
+            this.groupedComboBox1.FormattingEnabled = true;
+            this.groupedComboBox1.Location = new System.Drawing.Point(0, 5);
+            this.groupedComboBox1.Name = "groupedComboBox1";
+            this.groupedComboBox1.Size = new System.Drawing.Size(416, 21);
+            this.groupedComboBox1.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(413, 359);
+            this.Controls.Add(this.groupedComboBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
@@ -209,10 +214,12 @@ namespace DKMail
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox1;
-        private ComboBox comboBox1;
         private Button button2;
         private Button button3;
         private Label label1;
+        private Label label2;
+        private GroupedComboBox groupedComboBox1;
+
 
         private void _DragDrop(object sender, DragEventArgs e)
         {
@@ -252,7 +259,7 @@ namespace DKMail
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedIndex <= 0)
+            if (groupedComboBox1.SelectedIndex <= 0)
             {
                 MessageBox.Show("Выберите категорию обращения\nиз выпадающего списка сверху", "Ошибка");
                 return;
@@ -262,12 +269,12 @@ namespace DKMail
             try
             {
                 Outlook.MailItem mail = ol.CreateItem(Outlook.OlItemType.olMailItem) as Outlook.MailItem;
-                mail.Subject = comboBox1.Items[comboBox1.SelectedIndex].ToString();
+                mail.Subject = ((gitem) groupedComboBox1.SelectedItem).Display;
                 Outlook.AddressEntry currentUser = ol.Session.CurrentUser.AddressEntry;
                 if (currentUser.Type == "EX")
                 {
                     mail.Body = textBox1.Text.Equals("Введите текст обращения...") ? " " : textBox1.Text;
-                    mail.Recipients.Add(recipients[comboBox1.SelectedIndex - 1]);
+                    mail.Recipients.Add(((gitem)groupedComboBox1.SelectedItem).Mail);
                     mail.Recipients.ResolveAll();
                     for (int i = 0; i < listBox1.Items.Count; i++)
                         mail.Attachments.Add(listBox1.Items[i],
@@ -307,8 +314,6 @@ namespace DKMail
         {
             button2.Enabled = (listBox1.SelectedIndex >= 0);
         }
-
-        private Label label2;
     }
 }
 
