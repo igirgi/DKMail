@@ -9,10 +9,7 @@ User should:
 * write text of the message
 * press button at the bottom
 
-Settings are at the DKMail.config file in form:
-<group string>;<subject string>;<mail string with eMail address>
-
-For example  
+Settings are at the DKMail.config file, subjects may be grouped:  
 Gases;Helium;helium@sample.com  
 Gases;Hydrogen;hydro@sample.com  
 Gases;Oxygen;o@sample.com  
@@ -20,7 +17,6 @@ Metals;Iron;iron@sample.com
 Metals;Gold;qqq@sample.com  
 Radioactive;Uranium;cccc@sample.com  
 Radioactive;Radon;ddddd@sample.com  
-
 will be shown as  
 <pre>
 Gases  
