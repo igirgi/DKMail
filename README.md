@@ -9,8 +9,8 @@ User should:
 * write text of the message
 * press button at the bottom
 
-Settings are at the DKMail.config file in form:
-<group -string>;<subject -string>;<mail - string with eMail adress>
+Settings are at the DKMail.config file in form:  
+<group string>;<subject string>;<mail string with eMail address>
 
 For example  
 Gases;Helium;helium@sample.com  
@@ -22,6 +22,7 @@ Radioactive;Uranium;cccc@sample.com
 Radioactive;Radon;ddddd@sample.com  
 
 will be shown as  
+<pre>
 Gases  
 	Helium  
 	Hydrogen  
@@ -32,7 +33,7 @@ Metals
 Radioactive  
 	Uranium  
 	Radon  
-
+</pre>
 DKMail.config file can be placed at
 1. the same directory with EXE file
 2. C:\User\\<user>\AppData\Roaming\DKMail\DKMail\ – for selected user
