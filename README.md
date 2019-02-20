@@ -9,7 +9,7 @@ User should:
 * write text of the message
 * press button at the bottom
 
-Settings are at the DKMail.config file in form:  
+Settings are at the DKMail.config file in form:
 <group string>;<subject string>;<mail string with eMail address>
 
 For example  
@@ -36,7 +36,7 @@ Radioactive
 </pre>
 DKMail.config file can be placed at
 1. the same directory with EXE file
-2. C:\User\\<user>\AppData\Roaming\DKMail\DKMail\ – for selected user
+2. C:\User\..selecteduser..\AppData\Roaming\DKMail\DKMail\ – for selected user
 3. C:\ProgramData\DKMail\DKMail\  - for all users
 
 To use Outlook without confirmations - change security setting of Outlook https://support.microsoft.com/en-us/help/3189806/a-program-is-trying-to-send-an-e-mail-message-on-your-behalf-warning-i
